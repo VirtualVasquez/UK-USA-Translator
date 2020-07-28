@@ -58,7 +58,20 @@ function timeAToB(string){
     }    
   }
 }
-
+function timeBToA(string){
+  let strArr = string.split(" ");
+  let timeArr;
+  for (let i = 0; i < strArr.length; i++){
+    if (bTimeRegex.test(strArr[i])){
+      let perInd= strArr[i].indexOf(".");
+      let timeArr = strArr[i].split("");
+      timeArr.splice(perInd, 1, ":");
+      strArr[i] = '<span class="highlight">' + timeArr.join("") + '</span>';
+      finalTranslation = strArr.join(" ");
+      return translatedSentence.innerHTML = finalTranslation;
+    }    
+  }
+}
 function translateAToB(string){ 
  keyFound, valueFound, startIndex, endIndex, finalTranslation = '';
  if (textInput.value == ''){
@@ -87,51 +100,53 @@ function translateAToB(string){
   //if no match
   handleNoMatch();
 }
+function getKeyByValue(object, value){
+  return Object.keys(object).find(key => object[key] === value);
+}
+function translateBToA(string){
+ keyFound, valueFound, startIndex, endIndex, finalTranslation = '';
+ if (textInput.value == ''){
+   return handleError();
+ }
+//check if translation target is time, simpler target
+ timeBToA(string);
+ //stop here if that was it
+ if(finalTranslation !== ''){
+   return 
+ }
+ //move to B->A translation otherwise
+ let queryValues = Object.values(databaseAB); // in B->A, we need to match value
 
-
-
-function timeBToA(string){
-  let strArr = string.split(" ");
-  let timeArr;
-  for (let i = 0; i < strArr.length; i++){
-    if (bTimeRegex.test(strArr[i])){
-      let perInd= strArr[i].indexOf(".");
-      let timeArr = strArr[i].split("");
-      timeArr.splice(perInd, 1, ":");
-      strArr[i] = '<span class="highlight">' + timeArr.join("") + '</span>';
-      finalTranslation = strArr.join(" ");
+ for (let i = 0; i < queryValues.length; i++){
+    if (string.indexOf(queryValues[i]) !== -1){
+      valueFound = queryValues[i];
+      keyFound = '<span class="highlight">' + getKeyByValue(databaseAB, valueFound) + '</span>';
+      startIndex = string.indexOf(valueFound);
+      endIndex = string.indexOfEnd(valueFound);
+      finalTranslation = string.replaceAt(startIndex, endIndex, keyFound);
       return translatedSentence.innerHTML = finalTranslation;
     }    
   }
+  //if no match
+  handleNoMatch(); 
 }
-
-
-function handleTranslate(){
+function handleTranslate(string){
   if(localeSelect.value == "american-to-british"){
-    //look for any american words that match any in the input
-    //if found, return british version
+    translateAToB(string);
   }
   if(localeSelect.value == "british-to-american"){
-    //look for british words that match your any in the input
-    //if found, return american version
+    translateBToA(string);
   }
 }
 
-
-
-
 document.addEventListener("click", function(event){
-  
   if(event.target.matches("#clear-btn")){
     handleClear()
   }
-  
   if(event.target.matches("#translate-btn")){
-    translateAToB(textInput.value);
-  }
-  
+    handleTranslate(textInput.value);
+  } 
 })
-
 
 try {
   module.exports = {
