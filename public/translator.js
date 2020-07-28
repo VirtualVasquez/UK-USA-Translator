@@ -51,47 +51,6 @@ function translateAtoB(string){
   }
 }
 
-
-//a-to-b translations working, but need to target div, and iterate over each function for input string
-// function aOnly(string){
-//   let lowercase = string.toLowerCase();
-//   let queryKeys = Object.keys(americanOnly);
-//   for (let i = 0; i < queryKeys.length; i++){
-//     if (lowercase.indexOf(queryKeys[i]) !== -1){
-//       keyFound = queryKeys[i];
-//       valueFound = americanOnly[keyFound];
-//       targetIndex = (lowercase.indexOf(keyFound))
-//       console.log("Key Found: " + keyFound + " | Value Found: " + valueFound)//working
-//     }    
-//   }
-// }
-
-// function aToBSpelling(string){
-//   let lowercase = string.toLowerCase();
-//   let queryKeys = Object.keys(americanToBritishSpelling);
-//   for (let i = 0; i < queryKeys.length; i++){
-//     if (lowercase.indexOf(queryKeys[i]) !== -1){
-//       keyFound = queryKeys[i];
-//       valueFound = americanToBritishSpelling[keyFound];
-//       targetIndex = (lowercase.indexOf(keyFound))
-//       console.log("Key Found: " + keyFound + " | Value Found: " + valueFound)//working
-//     }    
-//   }
-// }
-
-// function aToBTitle(string){
-//   let lowercase = string.toLowerCase();
-//   let queryKeys = Object.keys(americanToBritishTitles);
-//   for (let i = 0; i < queryKeys.length; i++){
-//     if (lowercase.indexOf(queryKeys[i]) !== -1){
-//       keyFound = queryKeys[i];
-//       valueFound = americanToBritishTitles[keyFound];
-//       targetIndex = (lowercase.indexOf(keyFound))
-//       console.log("Key Found: " + keyFound + " | Value Found: " + valueFound)//working
-//     }    
-//   }
-// }
-
 function timeAToB(string){
   let strArr = string.split(" ");
   let timeArr;
@@ -115,10 +74,9 @@ function timeBToA(string){
       let colInd= strArr[i].indexOf(".");
       let timeArr = strArr[i].split("");
       timeArr.splice(colInd, 1, ":");
-      strArr[i] = timeArr.join("");
-      // console.log(strArr.join(" ")); //working
+      strArr[i] = '<span class="highlight">' + timeArr.join("") + '</span>';
       finalTranslation = strArr.join(" ");
-      return console.log(finalTranslation)
+      return translatedSentence.innerHTML = finalTranslation;
     }    
   }
 }
