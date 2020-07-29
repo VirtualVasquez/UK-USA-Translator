@@ -13,6 +13,8 @@ const aTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$/ //(\,|\.|\?|\!)?
 const bTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/ //(\,|\.|\?|\!)?
 let keyFound;
 let valueFound;
+let startIndex;
+let endIndex;
 let rawTranslation;
 let finalTranslation;
 
@@ -61,16 +63,14 @@ function timeAToB(string){
 function stringAToB(string){
  let queryKeys = Object.keys(databaseAB); // in A->B, we need to match Key
  for (let i = 0; i < queryKeys.length; i++){
-    if (string.includes(queryKeys[i])){
+    if (string.indexOf(queryKeys[i]) !== -1){
       keyFound = queryKeys[i];
       valueFound = databaseAB[keyFound];
-
+      startIndex = string.indexOf(keyFound);
+      endIndex = startIndex + keyFound.length
       rawTranslation =  string.replace(keyFound, valueFound)
-
       valueFound = '<span class="highlight">' + databaseAB[keyFound] + '</span>';
-      
       finalTranslation = string.replace(keyFound, valueFound);
-      
       console.log([rawTranslation, finalTranslation])
       return [rawTranslation, finalTranslation];
     }    
@@ -82,7 +82,8 @@ function titleAToB(string){
   for (let i = 0; i < queryKeys.length; i++){
      if (lowercase.indexOf(queryKeys[i]) !== -1){
        keyFound = queryKeys[i];
-
+       startIndex = lowercase.indexOf(keyFound);
+       endIndex = startIndex + keyFound.length;
        valueFound = capitalizeFirstLetter(americanToBritishTitles[keyFound])
        rawTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound)
        valueFound = '<span class="highlight">' + valueFound + '</span>';
@@ -136,7 +137,8 @@ function stringBToA(string){
  for (let i = 0; i < queryValues.length; i++){
     if (string.indexOf(queryValues[i]) !== -1){
       valueFound = queryValues[i];
-
+      startIndex = string.indexOf(valueFound);
+      endIndex = startIndex + valueFound.length;
       keyFound = getKeyByValue(databaseAB, valueFound);
       rawTranslation = string.replace(valueFound, keyFound)
       keyFound = '<span class="highlight">' + keyFound + '</span>';
@@ -153,7 +155,8 @@ function titleBToA(string){
   for (let i = 0; i < queryValues.length; i++){
     if (lowercase.indexOf(queryValues[i]) !== -1){
       valueFound = queryValues[i];
-
+      startIndex = string.indexOf(capitalizeFirstLetter(valueFound));
+      endIndex = startIndex + valueFound.length;
       keyFound = capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound));
       rawTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
       keyFound = '<span class="highlight">' + keyFound + '</span>';
@@ -186,7 +189,7 @@ function handleTranslate(string){
   if (string == ''){
     return handleError();
   }
-  keyFound,valueFound,rawTranslation, finalTranslation = '';
+  keyFound,valueFound,startIndex,endIndex,rawTranslation, finalTranslation = '';
   if(localeSelect.value == "american-to-british"){
     translateAToB(string);
   }
