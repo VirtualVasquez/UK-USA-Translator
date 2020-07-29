@@ -15,6 +15,7 @@ let keyFound;
 let valueFound;
 let startIndex;
 let endIndex;
+let rawTranslation;
 let finalTranslation;
 
 const textInput = document.getElementById("text-input");
@@ -23,16 +24,6 @@ const translatedSentence = document.getElementById("translated-sentence")
 const errorMsg = document.getElementById("error-msg");
 
 //GENERAL FUNCTIONS//
-String.prototype.indexOfEnd = function(string) {
-  var io = this.indexOf(string);
-  return io == -1 ? -1 : io + string.length
-}
-String.prototype.replaceAt = function(initIndex, finIndex, replacement){
-  if (initIndex >= this.length){
-    return this.valueOf();
-  }
-  return this.substring(0, initIndex) + replacement + this.substring(finIndex);
-}
 function handleError(){
   translatedSentence.innerHTML ="";
   return errorMsg.innerHTML = "Error: No text to translate."
@@ -41,7 +32,10 @@ function handleNoMatch(){
   return translatedSentence.innerHTML = "Everything looks good to me!";
 }
 function handleClear(){
-  return keyFound, valueFound, startIndex, endIndex, finalTranslation, textInput.value, translatedSentence.innerHTML, errorMsg.innerHTML = ''
+  keyFound, valueFound, startIndex, endIndex, rawTranslation, finalTranslation ='';
+  textInput.value = '';
+  translatedSentence.innerHTML = '';
+  errorMsg.innerHTML = '';
 }
 function capitalizeFirstLetter(string){
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -57,9 +51,13 @@ function timeAToB(string){
       let colInd= strArr[i].indexOf(":");
       timeArr = strArr[i].split("");
       timeArr.splice(colInd, 1, ".");
+      // strArr[i] =  '<span class="highlight">' + timeArr.join("") + '</span>';
+      strArr[i] = timeArr.join("");
+      rawTranslation = strArr.join(" ");
       strArr[i] =  '<span class="highlight">' + timeArr.join("") + '</span>';
       finalTranslation = strArr.join(" ");
-    }    
+      console.log([rawTranslation, finalTranslation])
+      return [rawTranslation, finalTranslation];    }    
   }
 }
 function stringAToB(string){
@@ -67,10 +65,14 @@ function stringAToB(string){
  for (let i = 0; i < queryKeys.length; i++){
     if (string.indexOf(queryKeys[i]) !== -1){
       keyFound = queryKeys[i];
-      valueFound = '<span class="highlight">' + databaseAB[keyFound] + '</span>';
+      valueFound = databaseAB[keyFound];
       startIndex = string.indexOf(keyFound);
-      endIndex = string.indexOfEnd(keyFound);
-      finalTranslation = string.replaceAt(startIndex, endIndex, valueFound);
+      endIndex = startIndex + keyFound.length
+      rawTranslation =  string.replace(keyFound, valueFound)
+      valueFound = '<span class="highlight">' + databaseAB[keyFound] + '</span>';
+      finalTranslation = string.replace(keyFound, valueFound);
+      console.log([rawTranslation, finalTranslation])
+      return [rawTranslation, finalTranslation];
     }    
   }
 }
@@ -80,10 +82,14 @@ function titleAToB(string){
   for (let i = 0; i < queryKeys.length; i++){
      if (lowercase.indexOf(queryKeys[i]) !== -1){
        keyFound = queryKeys[i];
-       valueFound = '<span class="highlight">' + capitalizeFirstLetter(americanToBritishTitles[keyFound]) + '</span>';
        startIndex = lowercase.indexOf(keyFound);
-       endIndex = lowercase.indexOfEnd(keyFound);
-       finalTranslation = string.replaceAt(startIndex, endIndex, valueFound);
+       endIndex = startIndex + keyFound.length;
+       valueFound = capitalizeFirstLetter(americanToBritishTitles[keyFound])
+       rawTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound)
+       valueFound = '<span class="highlight">' + valueFound + '</span>';
+       finalTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound);
+       console.log([rawTranslation, finalTranslation])
+       return [rawTranslation, finalTranslation];
      }    
    }
 }
@@ -113,9 +119,12 @@ function timeBToA(string){
       let perInd= strArr[i].indexOf(".");
       let timeArr = strArr[i].split("");
       timeArr.splice(perInd, 1, ":");
+      strArr[i] = timeArr.join("");
+      rawTranslation = strArr.join(" ");
       strArr[i] = '<span class="highlight">' + timeArr.join("") + '</span>';
       finalTranslation = strArr.join(" ");
-      // return translatedSentence.innerHTML = finalTranslation;
+      console.log([rawTranslation, finalTranslation])
+      return [rawTranslation, finalTranslation];
     }    
   }
 }
@@ -128,11 +137,14 @@ function stringBToA(string){
  for (let i = 0; i < queryValues.length; i++){
     if (string.indexOf(queryValues[i]) !== -1){
       valueFound = queryValues[i];
-      keyFound = '<span class="highlight">' + getKeyByValue(databaseAB, valueFound) + '</span>';
       startIndex = string.indexOf(valueFound);
-      endIndex = string.indexOfEnd(valueFound);
-      finalTranslation = string.replaceAt(startIndex, endIndex, keyFound);
-      return translatedSentence.innerHTML = finalTranslation;
+      endIndex = startIndex + valueFound.length;
+      keyFound = getKeyByValue(databaseAB, valueFound);
+      rawTranslation = string.replace(valueFound, keyFound)
+      keyFound = '<span class="highlight">' + keyFound + '</span>';
+      finalTranslation = string.replace(valueFound, keyFound);
+      console.log([rawTranslation, finalTranslation])
+      return [rawTranslation, finalTranslation];
     }    
   }
 }
@@ -143,10 +155,14 @@ function titleBToA(string){
   for (let i = 0; i < queryValues.length; i++){
     if (lowercase.indexOf(queryValues[i]) !== -1){
       valueFound = queryValues[i];
-      keyFound = '<span class="highlight">' + capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound)) + '</span>';
       startIndex = string.indexOf(capitalizeFirstLetter(valueFound));
-      endIndex = string.indexOfEnd(capitalizeFirstLetter(valueFound));
-      finalTranslation = string.replaceAt(startIndex, endIndex, keyFound);
+      endIndex = startIndex + valueFound.length;
+      keyFound = capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound));
+      rawTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
+      keyFound = '<span class="highlight">' + keyFound + '</span>';
+      finalTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
+      console.log([rawTranslation, finalTranslation])
+      return [rawTranslation, finalTranslation];
     }    
   }
 }
@@ -173,7 +189,7 @@ function handleTranslate(string){
   if (string == ''){
     return handleError();
   }
-  keyFound,valueFound,startIndex,endIndex,finalTranslation = '';
+  keyFound,valueFound,startIndex,endIndex,rawTranslation, finalTranslation = '';
   if(localeSelect.value == "american-to-british"){
     translateAToB(string);
   }
@@ -196,6 +212,18 @@ document.addEventListener("click", function(event){
 
 try {
   module.exports = {
-
+    handleError,
+    handleNoMatch,
+    handleClear,
+    capitalizeFirstLetter,
+    timeAToB,
+    stringAToB,
+    titleAToB,
+    translateAToB,
+    timeBToA,
+    getKeyByValue,
+    stringBToA,
+    titleBToA,
+    translateBToA
   }
 } catch (e) {}
