@@ -11,8 +11,6 @@ const databaseAB = {
 
 const aTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$/ //(\,|\.|\?|\!)?
 const bTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/ //(\,|\.|\?|\!)?
-let keyFound;
-let valueFound;
 let rawTranslation;
 let finalTranslation;
 
@@ -30,7 +28,7 @@ function handleNoMatch(){
   return translatedSentence.innerHTML = "Everything looks good to me!";
 }
 function handleClear(){
-  keyFound, valueFound, startIndex, endIndex, rawTranslation, finalTranslation ='';
+  rawTranslation, finalTranslation ='';
   textInput.value = '';
   translatedSentence.innerHTML = '';
   errorMsg.innerHTML = '';
@@ -59,15 +57,16 @@ function timeAToB(string){
   }
 }
 function stringAToB(string){
- let queryKeys = Object.keys(databaseAB); // in A->B, we need to match Key
+
+ let queryKeys = Object.keys(databaseAB); // in A->B, we need to match Key 
  for (let i = 0; i < queryKeys.length; i++){
     if (string.includes(queryKeys[i])){
-      keyFound = queryKeys[i];
-      valueFound = databaseAB[keyFound];
+      let keyFound = queryKeys[i]
+      let valueFound = databaseAB[keyFound];
 
       rawTranslation =  string.replace(keyFound, valueFound)
 
-      valueFound = '<span class="highlight">' + databaseAB[keyFound] + '</span>';
+      valueFound = '<span class="highlight">' + valueFound + '</span>';
       
       finalTranslation = string.replace(keyFound, valueFound);
       
@@ -75,16 +74,19 @@ function stringAToB(string){
       return [rawTranslation, finalTranslation];
     }    
   }
+
 }
 function titleAToB(string){
-  let lowercase = string.toLowerCase(); 
+  let lowercase = string.toLowerCase();
   let queryKeys = Object.keys(americanToBritishTitles); 
   for (let i = 0; i < queryKeys.length; i++){
      if (lowercase.indexOf(queryKeys[i]) !== -1){
-       keyFound = queryKeys[i];
+       let keyFound = queryKeys[i];
 
-       valueFound = capitalizeFirstLetter(americanToBritishTitles[keyFound])
+       let valueFound = capitalizeFirstLetter(americanToBritishTitles[keyFound])
+
        rawTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound)
+
        valueFound = '<span class="highlight">' + valueFound + '</span>';
        finalTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound);
        console.log([rawTranslation, finalTranslation])
@@ -135,9 +137,9 @@ function stringBToA(string){
 
  for (let i = 0; i < queryValues.length; i++){
     if (string.indexOf(queryValues[i]) !== -1){
-      valueFound = queryValues[i];
+      let valueFound = queryValues[i];
 
-      keyFound = getKeyByValue(databaseAB, valueFound);
+      let keyFound = getKeyByValue(databaseAB, valueFound);
       rawTranslation = string.replace(valueFound, keyFound)
       keyFound = '<span class="highlight">' + keyFound + '</span>';
       finalTranslation = string.replace(valueFound, keyFound);
@@ -152,9 +154,9 @@ function titleBToA(string){
 
   for (let i = 0; i < queryValues.length; i++){
     if (lowercase.indexOf(queryValues[i]) !== -1){
-      valueFound = queryValues[i];
+      let valueFound = queryValues[i];
 
-      keyFound = capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound));
+      let keyFound = capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound));
       rawTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
       keyFound = '<span class="highlight">' + keyFound + '</span>';
       finalTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
@@ -186,7 +188,7 @@ function handleTranslate(string){
   if (string == ''){
     return handleError();
   }
-  keyFound,valueFound,rawTranslation, finalTranslation = '';
+  rawTranslation, finalTranslation = '';
   if(localeSelect.value == "american-to-british"){
     translateAToB(string);
   }
