@@ -58,10 +58,12 @@ function timeAToB(string){
 }
 function stringAToB(string){
 
- let queryKeys = Object.keys(databaseAB); // in A->B, we need to match Key 
+ let queryKeys = Object.keys(databaseAB);
  for (let i = 0; i < queryKeys.length; i++){
-    if (string.includes(queryKeys[i])){
-      let keyFound = queryKeys[i]
+    let replace = queryKeys[i];
+    let regexKey = new RegExp(\b + replace + b\)
+    if (string.match(regexKey)){
+      let keyFound = replace
       let valueFound = databaseAB[keyFound];
 
       rawTranslation =  string.replace(keyFound, valueFound)

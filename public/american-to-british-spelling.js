@@ -650,7 +650,7 @@ export const americanToBritishSpelling = {
   "globalization": "globalisation",
   "globalize": "globalise",
   "globalized": "globalised",
-  "globalizes": "globalises",
+  "globalizes": "globalises", 
   "globalizing": "globalising",
   "gluing": "glueing",
   "goiter": "goitre",
