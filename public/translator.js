@@ -60,10 +60,10 @@ function stringAToB(string){
 
  let queryKeys = Object.keys(databaseAB);
  for (let i = 0; i < queryKeys.length; i++){
-    let replace = queryKeys[i];
-    let regexKey = new RegExp(\b + replace + b\)
+    let regTar = queryKeys[i]
+    let regexKey = new RegExp(`\\b${regTar}\\b`)
     if (string.match(regexKey)){
-      let keyFound = replace
+      let keyFound = regTar
       let valueFound = databaseAB[keyFound];
 
       rawTranslation =  string.replace(keyFound, valueFound)
