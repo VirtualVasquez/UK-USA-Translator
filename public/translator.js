@@ -2,16 +2,14 @@ import { americanOnly } from './american-only.js';
 import { britishOnly } from './british-only.js';
 import { americanToBritishSpelling } from './american-to-british-spelling.js';
 import { americanToBritishTitles } from './american-to-british-titles.js';
-
-let americanKeys = Object.keys(americanOnly);
+let spellingKeys = Object.keys(americanToBritishSpelling)
+let americanKeys = Object.keys(americanOnly).concat(spellingKeys);
 let britishKeys = Object.keys(britishOnly);
 let titleKeys = Object.keys(americanToBritishTitles);
-let spellingKeys = Object.keys(americanToBritishSpelling)
-const aTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$/ //(\,|\.|\?|\!)?
 
 const americanDB = {
   ...americanOnly,
-  ...americanToBritishSpelling,
+  ...americanToBritishSpelling
 }
 const britishDB = {
   ...britishOnly,
@@ -55,25 +53,38 @@ function highlight(string){
 // END GENERAL FUNCTIONS//
 
 
-function a2b (string){
-  let preRaw = string;
-  let preFormatted = string;
-?  //includes A-ONLY and SPELLING | excludes TIME and TITLE
+function A2B (string){
+  let raw = string;
+  let formatted = string;
+  let strSplit = string.split(" ")
+  //includes A-ONLY and SPELLING | excludes TIME and TITLE
   for( let i = 0; i < americanKeys.length; i++){
     if(string.includes(americanKeys[i])){
       let britWord = americanDB[americanKeys[i]];
-      preRaw = preRaw.replace(americanKeys[i],britWord);
-      preFormatted = preFormatted.replace(americanKeys[i],highlight(britWord)))
+      raw = raw.replace(americanKeys[i],britWord);
+      formatted = formatted.replace(americanKeys[i],highlight(britWord))
     }
   }
   //TITLE only
   for(let i = 0; i < titleKeys.length;i++){
     if(string.includes(upZero(titleKeys[i]))){
-      matches.push(titleKeys[i]);
+      raw = raw.replace(upZero(titleKeys[i]), upZero(americanToBritishTitles[titleKeys[i]]))
+      formatted = formatted.replace(upZero(titleKeys[i]), highlight(upZero(americanToBritishTitles[titleKeys[i]])))
     }
   }
   //TIME ONLY
-
+  for(let i = 0; i < strSplit.length; i++){
+    if(strSplit[i].includes(":")){
+      let britTime = strSplit[i].replace(":", ".");
+      raw = raw.replace(strSplit[i], britTime);
+      formatted = formatted.replace(strSplit[i], highlight(britTime));
+    }
+  }
+  if(raw == string){
+    return handleNoMatch();
+  }
+  translatedSentence.innerHTML = formatted;
+  return [raw, formatted]
 }
   
     //if time target
@@ -101,7 +112,6 @@ function handleTranslate(string){
   if (string == ''){
     return handleError();
   }
-  rawTranslation, finalTranslation = '';
   if(localeSelect.value == "american-to-british"){
     A2B(string);
   }
@@ -117,7 +127,6 @@ document.addEventListener("click", function(event){
     handleClear()
   }
   if(event.target.matches("#translate-btn")){
-    console.log(databaseBA);
     handleTranslate(textInput.value);
   } 
 })

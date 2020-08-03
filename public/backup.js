@@ -3,6 +3,7 @@ import { britishOnly } from './british-only.js';
 import { americanToBritishSpelling } from './american-to-british-spelling.js';
 import { americanToBritishTitles } from './american-to-british-titles.js';
 let spellingBToA = swap(americanToBritishSpelling);
+
 const databaseAB = {
   ...americanOnly,
   ...americanToBritishSpelling
@@ -36,8 +37,8 @@ function handleNoMatch(){
   return translatedSentence.innerHTML = "Everything looks good to me!";
 }
 function handleClear(){
-  rawTranslation, finalTranslation ='';
-  textInput.value = '';
+  // raw, formatted ='';
+  // textInput.value = '';
   translatedSentence.innerHTML = '';
   errorMsg.innerHTML = '';
 }
