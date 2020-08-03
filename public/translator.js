@@ -2,20 +2,22 @@ import { americanOnly } from './american-only.js';
 import { britishOnly } from './british-only.js';
 import { americanToBritishSpelling } from './american-to-british-spelling.js';
 import { americanToBritishTitles } from './american-to-british-titles.js';
-let spellingBToA = swap(americanToBritishSpelling);
 
-const databaseAB = {
-  ...americanOnly,
-  ...americanToBritishSpelling
-}
-const databaseBA = {
-  ...britishOnly,
-  ...spellingBToA
-}
+let americanKeys = Object.keys(americanOnly);
+let britishKeys = Object.keys(britishOnly);
+let titleKeys = Object.keys(americanToBritishTitles);
+let spellingKeys = Object.keys(americanToBritishSpelling)
 const aTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$/ //(\,|\.|\?|\!)?
-const bTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/ //(\,|\.|\?|\!)?
-let rawTranslation;
-let finalTranslation;
+
+const americanDB = {
+  ...americanOnly,
+  ...americanToBritishSpelling,
+}
+const britishDB = {
+  ...britishOnly,
+  ...swap(americanToBritishSpelling)
+}
+
 const textInput = document.getElementById("text-input");
 const localeSelect = document.getElementById("locale-select");//american-to-british || british-to-american//
 const translatedSentence = document.getElementById("translated-sentence")
@@ -37,168 +39,61 @@ function handleNoMatch(){
   return translatedSentence.innerHTML = "Everything looks good to me!";
 }
 function handleClear(){
-  rawTranslation, finalTranslation ='';
   textInput.value = '';
   translatedSentence.innerHTML = '';
   errorMsg.innerHTML = '';
 }
-function capitalizeFirstLetter(string){
+function lowZero(string){
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}
+function upZero(string){
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+function highlight(string){
+  return '<span class="highlight">' + string + '</span>'
 }
 // END GENERAL FUNCTIONS//
 
-//A-TO-B TRANSLATION FUNCTIONS//
-function timeAToB(string){
-  let strArr = string.split(" ");
-  let timeArr;
-  for (let i = 0; i < strArr.length; i++){
-    if (aTimeRegex.test(strArr[i])){
-      let colInd= strArr[i].indexOf(":");
-      timeArr = strArr[i].split("");
-      timeArr.splice(colInd, 1, ".");
-      // strArr[i] =  '<span class="highlight">' + timeArr.join("") + '</span>';
-      strArr[i] = timeArr.join("");
-      rawTranslation = strArr.join(" ");
-      strArr[i] =  '<span class="highlight">' + timeArr.join("") + '</span>';
-      finalTranslation = strArr.join(" ");
-      console.log([rawTranslation, finalTranslation])
-      return [rawTranslation, finalTranslation];    }    
+
+function a2b (string){
+  let preRaw = string;
+  let preFormatted = string;
+?  //includes A-ONLY and SPELLING | excludes TIME and TITLE
+  for( let i = 0; i < americanKeys.length; i++){
+    if(string.includes(americanKeys[i])){
+      let britWord = americanDB[americanKeys[i]];
+      preRaw = preRaw.replace(americanKeys[i],britWord);
+      preFormatted = preFormatted.replace(americanKeys[i],highlight(britWord)))
+    }
   }
-}
-function stringAToB(string){
-
- let queryKeys = Object.keys(databaseAB);
- for (let i = 0; i < queryKeys.length; i++){
-    let regTar = queryKeys[i]
-    let regexKey = new RegExp(`\\b${regTar}\\b`)
-    if (string.match(regexKey)){
-      let keyFound = regTar
-      let valueFound = databaseAB[keyFound];
-
-      rawTranslation =  string.replace(keyFound, valueFound)
-
-      valueFound = '<span class="highlight">' + valueFound + '</span>';
-      
-      finalTranslation = string.replace(keyFound, valueFound);
-      
-      console.log([rawTranslation, finalTranslation])
-      return [rawTranslation, finalTranslation];
-    }    
+  //TITLE only
+  for(let i = 0; i < titleKeys.length;i++){
+    if(string.includes(upZero(titleKeys[i]))){
+      matches.push(titleKeys[i]);
+    }
   }
+  //TIME ONLY
 
 }
-function titleAToB(string){
-  let lowercase = string.toLowerCase();
-  let queryKeys = Object.keys(americanToBritishTitles); 
-  for (let i = 0; i < queryKeys.length; i++){
-     if (lowercase.indexOf(queryKeys[i]) !== -1){
-       let keyFound = queryKeys[i];
-
-       let valueFound = capitalizeFirstLetter(americanToBritishTitles[keyFound])
-
-       rawTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound)
-
-       valueFound = '<span class="highlight">' + valueFound + '</span>';
-       finalTranslation = string.replace(capitalizeFirstLetter(keyFound), valueFound);
-       console.log([rawTranslation, finalTranslation])
-       return [rawTranslation, finalTranslation];
-     }    
-   }
-}
-function translateAToB(string){ 
- timeAToB(string);
- if(finalTranslation !== ""){
-  return translatedSentence.innerHTML = finalTranslation;
- }
- stringAToB(string);
- if(finalTranslation !== ""){
-    return translatedSentence.innerHTML = finalTranslation;
- }
- titleAToB(string);
- if(finalTranslation !== ''){
-  return translatedSentence.innerHTML = finalTranslation;
- }
- handleNoMatch();
-}
-//END A-TO-B TRANSLATION FUNCTIONS//
-
-//B-TO-A TRANSLATION FUNCTIONS//
-function timeBToA(string){
-  let strArr = string.split(" ");
-  let timeArr;
-  for (let i = 0; i < strArr.length; i++){
-    if (bTimeRegex.test(strArr[i])){
-      let perInd= strArr[i].indexOf(".");
-      timeArr = strArr[i].split("");
-      timeArr.splice(perInd, 1, ":");
-      strArr[i] = timeArr.join("");
-      rawTranslation = strArr.join(" ");
-      strArr[i] = '<span class="highlight">' + timeArr.join("") + '</span>';
-      finalTranslation = strArr.join(" ");
-      console.log([rawTranslation, finalTranslation])
-      return [rawTranslation, finalTranslation];
-    }    
-  }
-}
-function getKeyByValue(object, value){
-  return Object.keys(object).find(key => object[key] === value);
-}
-function stringBToA(string){
-  let queryKeys = Object.keys(databaseBA);
   
-  for (let i = 0; i < queryKeys.length; i++){
-    let regTar = queryKeys[i]
-    let regexKey = new RegExp(`\\b${regTar}\\b`)
-    if (string.match(regexKey)){
-      let keyFound = regTar
-      let valueFound = databaseBA[keyFound];
+    //if time target
+      //push literatl translation to raw,
+      //push html span to formatted
+    //... if title
+    //... ifword/spelling
+    //ELSE push splitString[i] to both arrays
 
-      rawTranslation =  string.replace(keyFound, valueFound)
+//function take string b2a
+  //establish two arrays: one raw, one formatted
+  //split string
+  //forloop split string
+    //if time target
+      //push literal translation to raw,
+      //push html span to formatted
+    //... if title
+    //... ifword/spelling
+    //ELSE push splitString[i] to both arrays
 
-      valueFound = '<span class="highlight">' + valueFound + '</span>';
-      
-      finalTranslation = string.replace(keyFound, valueFound);
-      
-      console.log([rawTranslation, finalTranslation])
-      return [rawTranslation, finalTranslation];
-    }    
-  }
-}
-function titleBToA(string){
-  let lowercase = string.toLowerCase(); //keys:values are all lowercase
-  let queryValues = Object.values(americanToBritishTitles); // in B->A, we need to match value
-
-  for (let i = 0; i < queryValues.length; i++){
-    if (lowercase.indexOf(queryValues[i]) !== -1){
-      let valueFound = queryValues[i];
-
-      let keyFound = capitalizeFirstLetter(getKeyByValue(americanToBritishTitles, valueFound));
-
-      rawTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
-      
-      keyFound = '<span class="highlight">' + keyFound + '</span>';
-      finalTranslation = string.replace(capitalizeFirstLetter(valueFound), keyFound);
-      console.log([rawTranslation, finalTranslation])
-      return [rawTranslation, finalTranslation];
-    }    
-  }
-}
-function translateBToA(string){
- timeBToA(string);
- if(finalTranslation !== ''){
-   return translatedSentence.innerHTML = finalTranslation;
- }
- stringBToA(string)
- if(finalTranslation !== ''){
-  return translatedSentence.innerHTML = finalTranslation;
- }
- titleBToA(string)
- if(finalTranslation !== ''){
-  return translatedSentence.innerHTML = finalTranslation;
- }
- handleNoMatch(); 
-}
-//END B-TO-A TRANSLATION FUNCTIONS//
 
 
 //ULTIMATE TRANSLATOR FUNCTION//
@@ -208,10 +103,10 @@ function handleTranslate(string){
   }
   rawTranslation, finalTranslation = '';
   if(localeSelect.value == "american-to-british"){
-    translateAToB(string);
+    A2B(string);
   }
   if(localeSelect.value == "british-to-american"){
-    translateBToA(string);
+    B2A(string);
   }
 }
 //END ULTIMATE TRANSLATOR FUNCTION//
@@ -230,18 +125,5 @@ document.addEventListener("click", function(event){
 
 try {
   module.exports = {
-    handleError,
-    handleNoMatch,
-    handleClear,
-    capitalizeFirstLetter,
-    timeAToB,
-    stringAToB,
-    titleAToB,
-    translateAToB,
-    timeBToA,
-    getKeyByValue,
-    stringBToA,
-    titleBToA,
-    translateBToA
   }
 } catch (e) {}
