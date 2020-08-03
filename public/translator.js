@@ -4,9 +4,10 @@ import { americanToBritishSpelling } from './american-to-british-spelling.js';
 import { americanToBritishTitles } from './american-to-british-titles.js';
 let spellingKeys = Object.keys(americanToBritishSpelling)
 let americanKeys = Object.keys(americanOnly).concat(spellingKeys);
-let britishKeys = Object.keys(britishOnly);
+let britishKeys = Object.keys(britishOnly).concat(Object.keys(swap(americanToBritishSpelling)));
 let titleKeys = Object.keys(americanToBritishTitles);
-
+let b2aTitles = swap(americanToBritishTitles);
+let b2aTitleKeys = Object.keys(b2aTitles);
 const americanDB = {
   ...americanOnly,
   ...americanToBritishSpelling
@@ -15,7 +16,6 @@ const britishDB = {
   ...britishOnly,
   ...swap(americanToBritishSpelling)
 }
-
 const textInput = document.getElementById("text-input");
 const localeSelect = document.getElementById("locale-select");//american-to-british || british-to-american//
 const translatedSentence = document.getElementById("translated-sentence")
@@ -40,9 +40,6 @@ function handleClear(){
   textInput.value = '';
   translatedSentence.innerHTML = '';
   errorMsg.innerHTML = '';
-}
-function lowZero(string){
-  return string.charAt(0).toLowerCase() + string.slice(1);
 }
 function upZero(string){
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -86,26 +83,39 @@ function A2B (string){
   translatedSentence.innerHTML = formatted;
   return [raw, formatted]
 }
-  
-    //if time target
-      //push literatl translation to raw,
-      //push html span to formatted
-    //... if title
-    //... ifword/spelling
-    //ELSE push splitString[i] to both arrays
-
-//function take string b2a
-  //establish two arrays: one raw, one formatted
-  //split string
-  //forloop split string
-    //if time target
-      //push literal translation to raw,
-      //push html span to formatted
-    //... if title
-    //... ifword/spelling
-    //ELSE push splitString[i] to both arrays
-
-
+function B2A (string){
+  let raw = string;
+  let formatted = string;
+  let strSplit = string.split(" ")
+  //includes B-ONLY and SPELLING | excludes TIME and TITLE
+  for( let i = 0; i < britishKeys.length; i++){
+    if(string.includes(britishKeys[i])){
+      let usaWord = britishDB[britishKeys[i]];
+      raw = raw.replace(britishKeys[i],usaWord);
+      formatted = formatted.replace(britishKeys[i],highlight(usaWord))
+    }
+  }
+  //TITLE only
+  for(let i = 0; i < b2aTitleKeys.length;i++){
+    if(string.includes(upZero(b2aTitleKeys[i]))){
+      raw = raw.replace(upZero(b2aTitleKeys[i]), upZero(b2aTitles[b2aTitleKeys[i]]))
+      formatted = formatted.replace(upZero(b2aTitleKeys[i]), highlight(upZero(b2aTitles[b2aTitleKeys[i]])))
+    }
+  }
+  //TIME ONLY
+  for(let i = 0; i < strSplit.length; i++){
+    if(strSplit[i].includes(".")){
+      let usaTime = strSplit[i].replace(".", ":");
+      raw = raw.replace(strSplit[i], usaTime);
+      formatted = formatted.replace(strSplit[i], highlight(usaTime));
+    }
+  }
+  if(raw == string){
+    return handleNoMatch();
+  }
+  translatedSentence.innerHTML = formatted;
+  return [raw, formatted]
+}
 
 //ULTIMATE TRANSLATOR FUNCTION//
 function handleTranslate(string){
@@ -134,5 +144,8 @@ document.addEventListener("click", function(event){
 
 try {
   module.exports = {
+    A2B,
+    B2A,
+    handleTranslate
   }
 } catch (e) {}

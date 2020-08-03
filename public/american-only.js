@@ -5,7 +5,7 @@ export const americanOnly = {
   "acetaminophen": "paracetamol",
   "baby carriage": "pram",
   "backhoe": "digger",
-  "band-aid": "Elastoplast",
+  "band-aid": "elastoplast",
   "bangs": "fringe",
   "barrette": "hair slide",
   "baseboard": "skirting board",
