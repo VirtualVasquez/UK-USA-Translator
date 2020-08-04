@@ -28,85 +28,85 @@ suite('Unit Tests', () => {
 
     suite('American to British English', () => {
 
-      // test('Mangoes are my favorite fruit. --> Mangoes are my favourite fruit.', done => {
-      //   const input = 'Mangoes are my favorite fruit.';
-      //   const output = 'Mangoes are my favourite fruit.';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('Mangoes are my favorite fruit. --> Mangoes are my favourite fruit.', done => {
+        const input = 'Mangoes are my favorite fruit.';
+        const output = 'Mangoes are my favourite fruit.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('I ate yogurt for breakfast. --> I ate yoghurt for breakfast.', done => {
-      //   const input = 'I ate yogurt for breakfast.';
-      //   const output = 'I ate yoghurt for breakfast.';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('I ate yogurt for breakfast. --> I ate yoghurt for breakfast.', done => {
+        const input = 'I ate yogurt for breakfast.';
+        const output = 'I ate yoghurt for breakfast.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test("We had a party at my friend's condo. --> We had a party at my friend's flat.", done => {
-      //   const input = "We had a party at my friend's condo.";
-      //   const output = "We had a party at my friend's flat.";
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test("We had a party at my friend's condo. --> We had a party at my friend's flat.", done => {
+        const input = "We had a party at my friend's condo.";
+        const output = "We had a party at my friend's flat.";
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('Can you toss this in the trashcan for me? --> Can you toss this in the bin for me?', done => {
-      //   const input = 'Can you toss this in the trashcan for me?';
-      //   const output = 'Can you toss this in the bin for me?';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('Can you toss this in the trashcan for me? --> Can you toss this in the bin for me?', done => {
+        const input = 'Can you toss this in the trashcan for me?';
+        const output = 'Can you toss this in the bin for me?';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('The parking lot was full. --> The car park was full.', done => {
-      //   const input = 'The parking lot was full.';
-      //   const output = 'The car park was full.';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('The parking lot was full. --> The car park was full.', done => {
+        const input = 'The parking lot was full.';
+        const output = 'The car park was full.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('Like a high tech Rube Goldberg machine. --> Like a high tech Heath Robinson device.', done => {
-      //   const input = 'Like a high tech Rube Goldberg machine.';
-      //   const output = 'Like a high tech Heath Robinson device.';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('Like a high tech Rube Goldberg machine. --> Like a high tech Heath Robinson device.', done => {
+        const input = 'Like a high tech Rube Goldberg machine.';
+        const output = 'Like a high tech Heath Robinson device.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
       
-      // test('To play hooky means to skip class or work. --> To bunk off means to skip class or work.', done => {
-      //   const input = 'To play hooky means to skip class or work.';
-      //   const output = 'To bunk off means to skip class or work.';
-      //   let result = Translator.stringAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('To play hooky means to skip class or work. --> To bunk off means to skip class or work.', done => {
+        const input = 'To play hooky means to skip class or work.';
+        const output = 'To bunk off means to skip class or work.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('No Mr. Bond, I expect you to die. --> No Mr Bond, I expect you to die. ', done => {
-      //   const input = 'No Mr. Bond, I expect you to die.';
-      //   const output = 'No Mr Bond, I expect you to die.';
-      //   let result = Translator.titleAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('No Mr. Bond, I expect you to die. --> No Mr Bond, I expect you to die. ', done => {
+        const input = 'No Mr. Bond, I expect you to die.';
+        const output = 'No Mr Bond, I expect you to die.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('Dr. Grosh will see you now. --> Dr Grosh will see you now. ', done => {
-      //   const input = 'Dr. Grosh will see you now.';
-      //   const output = 'Dr Grosh will see you now.';
-      //   let result = Translator.titleAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('Dr. Grosh will see you now. --> Dr Grosh will see you now. ', done => {
+        const input = 'Dr. Grosh will see you now.';
+        const output = 'Dr Grosh will see you now.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
-      // test('Lunch is at 12:15 today. --> Lunch is at 12.15 today.', done => {
-      //   const input = 'Lunch is at 12:15 today.';
-      //   const output = 'Lunch is at 12.15 today.';
-      //   let result = Translator.timeAToB(input)[0];
-      //   assert.equal(result, output);
-      //   done();
-      // });
+      test('Lunch is at 12:15 today. --> Lunch is at 12.15 today.', done => {
+        const input = 'Lunch is at 12:15 today.';
+        const output = 'Lunch is at 12.15 today.';
+        let result = Translator.A2B(input)[0];
+        assert.equal(result, output);
+        done();
+      });
 
     });
 

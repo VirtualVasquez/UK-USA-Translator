@@ -58,7 +58,7 @@ function A2B (string){
   let strSplit = string.split(" ")
   //includes A-ONLY and SPELLING | excludes TIME and TITLE
   for( let i = 0; i < americanKeys.length; i++){
-    if(string.includes(americanKeys[i])){
+    if(string.match(`\\b${americanKeys[i]}\\b`)){
       let britWord = americanDB[americanKeys[i]];
       raw = raw.replace(americanKeys[i],britWord);
       formatted = formatted.replace(americanKeys[i],highlight(britWord))
@@ -73,7 +73,7 @@ function A2B (string){
   }
   //TIME ONLY
   for(let i = 0; i < strSplit.length; i++){
-    if(strSplit[i].includes(":")){
+    if(aTimeRegex.test(strSplit[i])){
       let britTime = strSplit[i].replace(":", ".");
       raw = raw.replace(strSplit[i], britTime);
       formatted = formatted.replace(strSplit[i], highlight(britTime));
