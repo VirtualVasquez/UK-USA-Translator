@@ -79,10 +79,10 @@ function A2B (string){
       formatted = formatted.replace(strSplit[i], highlight(britTime));
     }
   }
-  if(raw == string){
-    return handleNoMatch();
-  }
-  translatedSentence.innerHTML = formatted;
+  // if(raw == string){
+  //   return handleNoMatch();
+  // }
+  // translatedSentence.innerHTML = formatted;
   return [raw, formatted]
 }
 function B2A (string){
@@ -113,10 +113,10 @@ function B2A (string){
       formatted = formatted.replace(strSplit[i], highlight(usaTime));
     }
   }
-  if(raw == string){
-    return handleNoMatch();
-  }
-  translatedSentence.innerHTML = formatted;
+  // if(raw == string){
+  //   return handleNoMatch();
+  // }
+  // translatedSentence.innerHTML = formatted;
   return [raw, formatted]
 }
 
@@ -125,12 +125,15 @@ function handleTranslate(string){
   if (string == ''){
     return handleError();
   }
+  let result;
   if(localeSelect.value == "american-to-british"){
-    A2B(string);
+    result = A2B(string);
   }
   if(localeSelect.value == "british-to-american"){
-    B2A(string);
+    result = B2A(string);
   }
+  if(result[0]==string) return handleNoMatch();
+  else  translatedSentence.innerHTML = result[1];
 }
 //END ULTIMATE TRANSLATOR FUNCTION//
 
@@ -149,6 +152,7 @@ try {
   module.exports = {
     A2B,
     B2A,
-    handleTranslate
+    handleTranslate,
+    handleClear
   }
 } catch (e) {}
