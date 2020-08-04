@@ -20,6 +20,8 @@ const textInput = document.getElementById("text-input");
 const localeSelect = document.getElementById("locale-select");//american-to-british || british-to-american//
 const translatedSentence = document.getElementById("translated-sentence")
 const errorMsg = document.getElementById("error-msg");
+const aTimeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9](\,|\.|\?|\!)?$/
+const bTimeRegex = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9](\,|\.|\?|\!)?$/)
 
 //GENERAL FUNCTIONS//
 function swap(obj){
@@ -89,7 +91,7 @@ function B2A (string){
   let strSplit = string.split(" ")
   //includes B-ONLY and SPELLING | excludes TIME and TITLE
   for( let i = 0; i < britishKeys.length; i++){
-    if(string.includes(britishKeys[i])){
+    if(string.match(`\\b${britishKeys[i]}\\b`)){
       let usaWord = britishDB[britishKeys[i]];
       raw = raw.replace(britishKeys[i],usaWord);
       formatted = formatted.replace(britishKeys[i],highlight(usaWord))
@@ -97,14 +99,15 @@ function B2A (string){
   }
   //TITLE only
   for(let i = 0; i < b2aTitleKeys.length;i++){
-    if(string.includes(upZero(b2aTitleKeys[i]))){
+    let titleRegex = new RegExp(`\\b${b2aTitleKeys[i]}\\b`, 'i')
+    if(string.match(titleRegex)){
       raw = raw.replace(upZero(b2aTitleKeys[i]), upZero(b2aTitles[b2aTitleKeys[i]]))
       formatted = formatted.replace(upZero(b2aTitleKeys[i]), highlight(upZero(b2aTitles[b2aTitleKeys[i]])))
     }
   }
   //TIME ONLY
   for(let i = 0; i < strSplit.length; i++){
-    if(strSplit[i].includes(".")){
+    if(bTimeRegex.test(strSplit[i])){
       let usaTime = strSplit[i].replace(".", ":");
       raw = raw.replace(strSplit[i], usaTime);
       formatted = formatted.replace(strSplit[i], highlight(usaTime));
